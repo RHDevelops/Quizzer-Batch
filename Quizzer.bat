@@ -3,24 +3,24 @@ title Quizzer ^| by RHDevelops
 mode con cols=80 lines=25
 setlocal EnableDelayedExpansion
 
-:
+:Welcome
 cls
 echo.
 echo.
 echo.
 echo                   W E L C O M E              T O
 echo           ______             __
-echo          /      \           /  ^|                                        
-echo         /$$$$$$  ^| __    __ $$/  ________  ________   ______    ______  
-echo         $$ ^|  $$ ^|/  ^|  /  ^|/  ^|/        ^|/        ^| /      \  /      \ 
+echo          /      \           /  ^|
+echo         /$$$$$$  ^| __    __ $$/  ________  ________   ______    ______
+echo         $$ ^|  $$ ^|/  ^|  /  ^|/  ^|/        ^|/        ^| /      \  /      \
 echo         $$ ^|  $$ ^|$$ ^|  $$ ^|$$ ^|$$$$$$$$/ $$$$$$$$/ /$$$$$$  ^|/$$$$$$  ^|
-echo         $$ ^|_ $$ ^|$$ ^|  $$ ^|$$ ^|  /  $$/    /  $$/  $$    $$ ^|$$ ^|  $$/ 
-echo         $$ / \$$ ^|$$ \__$$ ^|$$ ^| /$$$$/__  /$$$$/__ $$$$$$$$/ $$ ^|      
-echo         $$ $$ $$^< $$    $$/ $$ ^|/$$      ^|/$$      ^|$$       ^|$$ ^|      
-echo         $$$$$$  ^| $$$$$$/  $$/ $$$$$$$$/ $$$$$$$$/  $$$$$$$/ $$/       
+echo         $$ ^|_ $$ ^|$$ ^|  $$ ^|$$ ^|  /  $$/    /  $$/  $$    $$ ^|$$ ^|  $$/
+echo         $$ / \$$ ^|$$ \__$$ ^|$$ ^| /$$$$/__  /$$$$/__ $$$$$$$$/ $$ ^|
+echo         $$ $$ $$^< $$    $$/ $$ ^|/$$      ^|/$$      ^|$$       ^|$$ ^|
+echo         $$$$$$  ^| $$$$$$/  $$/ $$$$$$$$/ $$$$$$$$/  $$$$$$$/ $$/
 echo              $$$/
 echo.
-echo Version 1.0
+echo Version 1.0.1
 
 :ChkDefaults
 set banner=--------------------------------------------------------------------------------
@@ -58,7 +58,6 @@ if "%choice%"=="1" start "" "https://github.com/RHDevelops/Quizzer-Batch"
 if "%choice%"=="1" goto QuitScreen
 goto NoQuestions
 
-
 :MainMenu
 cls
 echo.
@@ -87,8 +86,6 @@ if "%choice%"=="1" goto GameConfig
 goto MainMenu
 
 :GameConfig
-echo Hello. I can't believe you took the time to look at this message. Tacos.
-
 :GameConfig1
 if exist "Questions\tempsubjectlist.txt" del /f /q "Questions\tempsubjectlist.txt"
 dir /b /a:d "Questions" > "Questions\tempsubjectlist.txt"
@@ -223,51 +220,19 @@ echo.
 echo %banner%
 pause > nul
 
-set "subj1name=%subj1%                "
-set "subj2name=%subj2%                "
-set "subj3name=%subj3%                "
-set "subj4name=%subj4%                "
-set "subj5name=%subj5%                "
+for /l %%a in (1, 1, 5) do (
+set "subj%%aname=!subj%%a!                "
+)
 
-set team1=0
-set team2=0
-set team3=0
-set team4=0
+for %%a in (100 250 500 750 1000 1250) do (
+for /l %%b in (1, 1, 5) do (
+set s%%b_%%a=0
+)
+)
 
-set s1_100=0
-set s1_250=0
-set s1_500=0
-set s1_750=0
-set s1_1000=0
-set s1_1250=0
-
-set s2_100=0
-set s2_250=0
-set s2_500=0
-set s2_750=0
-set s2_1000=0
-set s2_1250=0
-
-set s3_100=0
-set s3_250=0
-set s3_500=0
-set s3_750=0
-set s3_1000=0
-set s3_1250=0
-
-set s4_100=0
-set s4_250=0
-set s4_500=0
-set s4_750=0
-set s4_1000=0
-set s4_1250=0
-
-set s5_100=0
-set s5_250=0
-set s5_500=0
-set s5_750=0
-set s5_1000=0
-set s5_1250=0
+for /l %%a in (1, 1, 4) do (
+set team%%a=0
+)
 
 set subj1files=0
 for %%x in ("Questions\%subj1%\*.bat") do set /a subj1files+=1
@@ -385,7 +350,7 @@ echo.
 echo %banner%
 set s%subnum%_%subprize%=X
 set /a questionsanswered=%questionsanswered%+1
-pause > nul
+pause >nul
 goto GameSetup
 
 :CorrectAnswerDialog
@@ -406,7 +371,7 @@ echo.
 echo %banner%
 set s%subnum%_%subprize%=X
 set /a questionsanswered=%questionsanswered%+1
-pause > nul
+pause >nul
 goto GameSetup
 
 
@@ -439,7 +404,7 @@ echo The "0" indicates that a specific question is available.
 echo Press any key to select another question to answer.
 echo.
 echo %banner%
-pause > nul
+pause >nul
 goto GameSetup
 
 :CreditsAbout
@@ -494,7 +459,7 @@ echo Press any key to continue.
 echo.
 echo %banner%
 pause > nul
-ping -n 5 localhost > nul
+ping -n 5 localhost >nul
 echo Please wait.
 goto CreditsAbout
 
@@ -510,4 +475,4 @@ echo.
 echo Press any key to exit this program.
 echo.
 echo %banner%
-pause > nul
+pause >nul
