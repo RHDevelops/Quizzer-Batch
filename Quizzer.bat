@@ -2,36 +2,36 @@
 title Quizzer ^| by RHDevelops
 mode con cols=80 lines=25
 setlocal EnableDelayedExpansion
+chcp 65001
+
+set banner=--------------------------------------------------------------------------------
+set qbanner=Quizzer ------------------------------------------------------------------------
+set "ngbanner=Quizzer - New Game -------------------------------------------------------------"
 
 :Welcome
 cls
 echo.
 echo.
+echo              W E L C O M E     T O
 echo.
-echo                   W E L C O M E              T O
-echo           ______             __
-echo          /      \           /  ^|
-echo         /$$$$$$  ^| __    __ $$/  ________  ________   ______    ______
-echo         $$ ^|  $$ ^|/  ^|  /  ^|/  ^|/        ^|/        ^| /      \  /      \
-echo         $$ ^|  $$ ^|$$ ^|  $$ ^|$$ ^|$$$$$$$$/ $$$$$$$$/ /$$$$$$  ^|/$$$$$$  ^|
-echo         $$ ^|_ $$ ^|$$ ^|  $$ ^|$$ ^|  /  $$/    /  $$/  $$    $$ ^|$$ ^|  $$/
-echo         $$ / \$$ ^|$$ \__$$ ^|$$ ^| /$$$$/__  /$$$$/__ $$$$$$$$/ $$ ^|
-echo         $$ $$ $$^< $$    $$/ $$ ^|/$$      ^|/$$      ^|$$       ^|$$ ^|
-echo         $$$$$$  ^| $$$$$$/  $$/ $$$$$$$$/ $$$$$$$$/  $$$$$$$/ $$/
-echo              $$$/
+echo   █████  █   █ █████ █████ █████ █████ █████
+echo   █   █  █   █   █       █     █ █     █   █
+echo   █   █  █   █   █      █     █  █     █   █
+echo   █   █  █   █   █     █     █   █████ ████
+echo   █   █  █   █   █    █     █    █     █ █
+echo   █   █  █   █   █   █     █     █     █  █
+echo   █████  █████ █████ █████ █████ █████ █   █
+echo       ██
 echo.
-echo Version 1.0.1
+echo Version 1.0.2
 
 :ChkDefaults
-set banner=--------------------------------------------------------------------------------
-set qbanner=Quizzer ------------------------------------------------------------------------
-set "ngbanner=Quizzer - New Game -------------------------------------------------------------" 
 echo Checking Quizzer directories...
 if not exist "Questions" goto NoQuestions
 echo Verifying Question Documents...
 if not exist "Questions\WW2-Builtin\1.bat" goto NoQuestions
-echo Wasting your time... but look at the cool ASCII art.
-ping -n 5 localhost > nul
+echo Wasting your time...
+ping -n 5 localhost>nul
 goto MainMenu
 
 :NoQuestions
@@ -61,9 +61,9 @@ goto NoQuestions
 :MainMenu
 cls
 echo.
-echo Quizzer Main Menu --------------------------------------------------------------
+echo %qbanner%
 echo.
-echo Welcome to Quizzer! Enter the number corresponding to your action, then "Enter".
+echo Welcome to Quizzer. Enter the number corresponding to your action, then "Enter".
 echo.
 echo 1) Start New Game
 echo.
@@ -86,9 +86,8 @@ if "%choice%"=="1" goto GameConfig
 goto MainMenu
 
 :GameConfig
-:GameConfig1
 if exist "Questions\tempsubjectlist.txt" del /f /q "Questions\tempsubjectlist.txt"
-dir /b /a:d "Questions" > "Questions\tempsubjectlist.txt"
+dir /b /a:d "Questions" >"Questions\tempsubjectlist.txt"
 cls
 echo.
 echo %ngbanner%
@@ -104,15 +103,15 @@ echo %banner%
 set /p subj1=Subject 1:
 if "%subj1%"=="dispsubjects" goto dispsubjects
 if "%subj1%"=="back" goto MainMenu
-if not exist "Questions\%subj1%" goto GameConfig1
+if not exist "Questions\%subj1%" goto GameConfig
 set /p subj2=Subject 2:
-if not exist "Questions\%subj2%" goto GameConfig1
+if not exist "Questions\%subj2%" goto GameConfig
 set /p subj3=Subject 3:
-if not exist "Questions\%subj3%" goto GameConfig1
+if not exist "Questions\%subj3%" goto GameConfig
 set /p subj4=Subject 4:
-if not exist "Questions\%subj4%" goto GameConfig1
+if not exist "Questions\%subj4%" goto GameConfig
 set /p subj5=Subject 5:
-if not exist "Questions\%subj5%" goto GameConfig1
+if not exist "Questions\%subj5%" goto GameConfig
 goto GameConfigFinal
 
 :AddQuestions
@@ -132,36 +131,36 @@ if not exist "Questions\%choice%" md "Questions\%choice%"
 cls
 echo %qbanner%
 echo.
-echo Type in the questions and answers. They are case sensitive.
+echo Type in the question and answer. They are case sensitive.
 echo Type "back" without quotes to return.
 echo.
 echo %banner%
-set /p question100=100 Point Question:
+set /p question100=100pt Question:
 if "%question100%"=="back" goto MainMenu
 set /p answer100=Answer:
 if "%answer100%"=="back" goto MainMenu
 
-set /p question250=250 Point Question:
+set /p question250=250pt Question:
 if "%question250%"=="back" goto MainMenu
 set /p answer250=Answer:
 if "%answer250%"=="back" goto MainMenu
 
-set /p question500=500 Point Question:
+set /p question500=500pt Question:
 if "%question500%"=="back" goto MainMenu
 set /p answer500=Answer:
 if "%answer500%"=="back" goto MainMenu
 
-set /p question750=750 Point Question:
+set /p question750=750pt Question:
 if "%question750%"=="back" goto MainMenu
 set /p answer750=Answer:
 if "%answer750%"=="back" goto MainMenu
 
-set /p question1000=1000 Point Question:
+set /p question1000=1000pt Question:
 if "%question1000%"=="back" goto MainMenu
 set /p answer1000=Answer:
 if "%answer1000%"=="back" goto MainMenu
 
-set /p question1250=1250 Point Question:
+set /p question1250=1250pt Question:
 if "%question1250%"=="back" goto MainMenu
 set /p answer1250=Answer:
 if "%answer1250%"=="back" goto MainMenu
@@ -171,21 +170,21 @@ if "%confirm%"=="n" goto MainMenu
 set filect=0
 for %%x in ("Questions\%choice%\*.bat") do set /a filect+=1
 set /a filect=%filect%+1
-echo @echo off > "Questions\%choice%\%filect%.bat"
-echo set num=%%1 >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_100=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_100=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_250=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_250=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_500=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_500=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_750=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_750=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_1000=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_1000=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo set q%%num%%_1250=%question100% >> "Questions\%choice%\%filect%.bat"
-echo set a%%num%%_1250=%answer100% >> "Questions\%choice%\%filect%.bat"
-echo FILE CREATION COMPLETE. Can be found under "Questions\%choice%\%filect%.bat"
+echo @echo off >"Questions\%choice%\%filect%.bat"
+echo set num=%%1 >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_100=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_100=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_250=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_250=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_500=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_500=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_750=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_750=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_1000=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_1000=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo set q%%num%%_1250=%question100% >>"Questions\%choice%\%filect%.bat"
+echo set a%%num%%_1250=%answer100% >>"Questions\%choice%\%filect%.bat"
+echo Question file: "Questions\%choice%\%filect%.bat"
 pause
 goto MainMenu
 
@@ -198,7 +197,7 @@ more "Questions\tempsubjectlist.txt"
 echo.
 echo %banner%
 pause
-goto GameConfig1
+goto GameConfig
 
 :GameConfigFinal
 cls
@@ -218,7 +217,7 @@ echo.
 echo Press any key to begin gameplay.
 echo.
 echo %banner%
-pause > nul
+pause>nul
 
 for /l %%a in (1, 1, 5) do (
 set "subj%%aname=!subj%%a!                "
@@ -350,7 +349,7 @@ echo.
 echo %banner%
 set s%subnum%_%subprize%=X
 set /a questionsanswered=%questionsanswered%+1
-pause >nul
+pause>nul
 goto GameSetup
 
 :CorrectAnswerDialog
@@ -371,7 +370,7 @@ echo.
 echo %banner%
 set s%subnum%_%subprize%=X
 set /a questionsanswered=%questionsanswered%+1
-pause >nul
+pause>nul
 goto GameSetup
 
 
@@ -404,7 +403,7 @@ echo The "0" indicates that a specific question is available.
 echo Press any key to select another question to answer.
 echo.
 echo %banner%
-pause >nul
+pause>nul
 goto GameSetup
 
 :CreditsAbout
@@ -414,8 +413,7 @@ echo Quizzer Credits and About -------------------------------------------------
 echo.
 echo   Hello! Thanks for looking at this; I was honestly expecting no one to look in
 echo here. You deserve a cookie! Anyways, this program was developed wholly by me,
-echo RHDevelops. I used only one tool from someone else; it was the ASCII art tool
-echo on patorjk.com.
+echo RHDevelops.
 echo   This is my first project that I have actually distributed for other people to
 echo download and enjoy. Made in just one day. Follow the links below to reach out!
 echo   This work is placed under the GNU GPL v3 license. It should be in this folder.
@@ -428,15 +426,12 @@ echo 3) Subscribe to my YouTube channel  youtube.com/channel/UC8O9jPsC97ryuZJG6H
 echo.
 echo 4) Visit my blog                    rhdevelops.blogspot.com
 echo.
-echo 5) PATORJK ASCII tool               patorjk.com/software/taag
-echo.
-echo 6) Back to Main Menu
+echo 5) Back to Main Menu
 echo.
 echo %banner%
 set "choice=A"
 set /p choice=Choice:
-if "%choice%"=="6" goto MainMenu
-if "%choice%"=="5" start "" "http://patorjk.com/software/taag"
+if "%choice%"=="5" goto MainMenu
 if "%choice%"=="4" start "" "https://rhdevelops.blogspot.com"
 if "%choice%"=="3" start "" "https://youtube.com/channel/UC8O9jPsC97ryuZJG6H9NoYQ"
 if "%choice%"=="2" start "" "https://twitter.com/RHDevelopsS"
@@ -458,8 +453,8 @@ echo Congratulations to all those who have stuck around. Come again.
 echo Press any key to continue.
 echo.
 echo %banner%
-pause > nul
-ping -n 5 localhost >nul
+pause>nul
+ping -n 5 localhost>nul
 echo Please wait.
 goto CreditsAbout
 
@@ -475,4 +470,4 @@ echo.
 echo Press any key to exit this program.
 echo.
 echo %banner%
-pause >nul
+pause>nul
