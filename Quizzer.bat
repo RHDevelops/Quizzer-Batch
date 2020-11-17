@@ -1,69 +1,161 @@
 @echo off
-title Quizzer ^| by RHDevelops
-mode con cols=80 lines=25
+title Quizzer
+mode con cols=80 lines=30
 setlocal EnableDelayedExpansion
 chcp 65001
 
 set banner=--------------------------------------------------------------------------------
 set qbanner=Quizzer ------------------------------------------------------------------------
 set "ngbanner=Quizzer - New Game -------------------------------------------------------------"
+set "errbanner=Quizzer - Error ----------------------------------------------------------------"
+set "settingbanner=Quizzer - Settings ------------------------------------------------------------"
+
+if not exist "qdata\config.cfg" (
+cls
+echo %qbanner%
+echo.
+echo No configuration file has been found. One will be automatically generated.
+echo Changes can be made in the game's settings. Press any key to continue.
+echo.
+echo %banner%
+(echo TDelay=1
+echo ColorBG=0
+echo ColorTXT=7)> "qdata\config.cfg"
+pause>nul
+)
 
 :Welcome
 cls
 echo.
 echo.
-echo              W E L C O M E     T O
+echo  ╔════════  W E L C O M E  ════  T O  ════════╗
+echo  ║                                            ║
+echo  ║ █████  █   █ █████ █████ █████ █████ █████ ║
+echo  ║ █   █  █   █   █       █     █ █     █   █ ║
+echo  ║ █   █  █   █   █      █     █  █     █   █ ║
+echo  ║ █   █  █   █   █     █     █   █████ ████  ║
+echo  ║ █   █  █   █   █    █     █    █     █ █   ║
+echo  ║ █   █  █   █   █   █     █     █     █  █  ║
+echo  ║ █████  █████ █████ █████ █████ █████ █   █ ║
+echo  ║     ██                                     ║
+echo  ║                                            ║
+echo  ║ Version 1.0.3                              ║
+echo  ║ By RHDevelops on GitHub                    ║
+echo  ║                                            ║
+echo  ╚════════════════════════════════════════════╝
 echo.
-echo   █████  █   █ █████ █████ █████ █████ █████
-echo   █   █  █   █   █       █     █ █     █   █
-echo   █   █  █   █   █      █     █  █     █   █
-echo   █   █  █   █   █     █     █   █████ ████
-echo   █   █  █   █   █    █     █    █     █ █
-echo   █   █  █   █   █   █     █     █     █  █
-echo   █████  █████ █████ █████ █████ █████ █   █
-echo       ██
-echo.
-echo Version 1.0.2
 
 :ChkDefaults
 echo Checking Quizzer directories...
-if not exist "Questions" goto NoQuestions
-echo Verifying Question Documents...
-if not exist "Questions\WW2-Builtin\1.bat" goto NoQuestions
-echo Wasting your time...
-ping -n 5 localhost>nul
+
+for /f %%a in (qdata\config.cfg) do (
+set %%a
+)
+color %ColorBG%%ColorTXT%
+
+echo Verifying Question documents...
+
+echo Look at who took the time to enjoy my art...
+if %TDelay%==1 ping -n 4 localhost>nul
 goto MainMenu
 
-:NoQuestions
-md "Questions"
+:GeneralConfig
+if %TDelay%==1 set spp=enable
+if %TDelay%==0 set spp=disable
 cls
+echo %settingbanner%
 echo.
-echo Quizzer Error - No Questions Found ---------------------------------------------
+echo Settings will take effect when you select "back".
 echo.
-echo   It appears that there are no questions available for Quizzer to select from.
-echo Go to the appropriate GitHub repository for the latest version of Quizzer and a
-echo variety of questions across multiple subjects. The folder with the questions
-echo should be inside the folder this batch file is inside of.
-echo   Make a choice using the corresponding numbers.
+echo 1) Toggle long splash display (%spp%d)
 echo.
-echo 1) Go to repository, then exit
+echo 2) Text Color (hex value %ColorTXT%)
 echo.
-echo 2) Exit Quizzer
+echo 3) Background Color (hex value %ColorBG%)
+echo.
+echo 4) Back
 echo.
 echo %banner%
-set "choice=A"
-set /p choice=Choice:
-if "%choice%"=="2" goto QuitScreen
-if "%choice%"=="1" start "" "https://github.com/RHDevelops/Quizzer-Batch"
-if "%choice%"=="1" goto QuitScreen
-goto NoQuestions
+choice /c 1234 /n /m "Choice:"
+if %errorlevel%==4 (
+del /f /q qdata\config.cfg
+ping -n 1 localhost>nul
+color %ColorBG%%ColorTXT%
+(echo TDelay=%TDelay%
+echo ColorBG=%ColorBG%
+echo ColorTXT=%ColorTXT%)> "qdata\config.cfg"
+goto MainMenu
+)
+if %errorlevel%==3 (
+set chg=BG
+goto SetCol
+)
+if %errorlevel%==2 (
+set chg=TXT
+goto SetCol
+)
+if %errorlevel%==1 goto SetLSD
+if %errorlevel%==255 goto :eof
+goto GeneralConfig
+
+:SetCol
+cls
+echo %settingbanner%
+echo.
+echo When changing colors, refer to the hex codes below.
+echo Enter the hex digit, or "z" to cancel.
+echo.
+echo       0 = Black       8 = Gray
+echo       1 = Blue        9 = Light Blue
+echo       2 = Green       A = Light Green
+echo       3 = Aqua        B = Light Aqua
+echo       4 = Red         C = Light Red
+echo       5 = Purple      D = Light Purple
+echo       6 = Yellow      E = Light Yellow
+echo       7 = White       F = Bright White
+echo.
+echo %banner%
+choice /c 0123456789ABCDEFZ /n /m "Choice:"
+if %errorlevel%==17 goto GeneralConfig
+if %errorlevel%==16 set Color!chg!=F
+if %errorlevel%==15 set Color!chg!=E
+if %errorlevel%==14 set Color!chg!=D
+if %errorlevel%==13 set Color!chg!=C
+if %errorlevel%==12 set Color!chg!=B
+if %errorlevel%==11 set Color!chg!=A
+if %errorlevel%==10 set Color!chg!=9
+if %errorlevel%==9 set Color!chg!=8
+if %errorlevel%==8 set Color!chg!=7
+if %errorlevel%==7 set Color!chg!=6
+if %errorlevel%==6 set Color!chg!=5
+if %errorlevel%==5 set Color!chg!=4
+if %errorlevel%==4 set Color!chg!=3
+if %errorlevel%==3 set Color!chg!=2
+if %errorlevel%==2 set Color!chg!=1
+if %errorlevel%==1 set Color!chg!=0
+goto GeneralConfig
+
+:SetLSD
+cls
+echo %settingbanner%
+echo.
+echo Setting the Long Splash Display
+echo.
+echo Turning this on will add a two-second delay at the beginning so the splash
+echo screen can be enjoyed. Enter 1 to enable or 0 to disable, or "z" to go back.
+echo.
+echo %banner%
+choice /c 10Z /n /m "Choice:"
+if %errorlevel%==3 goto GeneralConfig
+if %errorlevel%==2 set TDelay=0
+if %errorlevel%==1 set TDelay=1
+goto GeneralConfig
 
 :MainMenu
 cls
-echo.
 echo %qbanner%
 echo.
-echo Welcome to Quizzer. Enter the number corresponding to your action, then "Enter".
+echo Welcome to Quizzer. Enter the number corresponding to your action.
 echo.
 echo 1) Start New Game
 echo.
@@ -71,25 +163,26 @@ echo 2) Get More Questions (GitHub link)
 echo.
 echo 3) Add More Questions (Manually)
 echo.
-echo 4) Credits and About
+echo 4) General Configuration
 echo.
-echo 5) Exit Quizzer
+echo 5) Credits and About
+echo.
+echo 6) Exit Quizzer
 echo.
 echo %banner%
-set "choice=A"
-set /p choice=Choice:
-if "%choice%"=="5" goto QuitScreen
-if "%choice%"=="4" goto CreditsAbout
-if "%choice%"=="3" goto AddQuestions
-if "%choice%"=="2" start "" "https://github.com/RHDevelops/Quizzer-Batch"
-if "%choice%"=="1" goto GameConfig
+choice /c 123456 /n /m "Choice:"
+if %errorlevel%==6 goto QuitScreen
+if %errorlevel%==5 goto CreditsAbout
+if %errorlevel%==4 goto GeneralConfig
+if %errorlevel%==3 goto AddQuestions
+if %errorlevel%==2 start "" "https://github.com/RHDevelops/Quizzer-Batch"
+if %errorlevel%==1 goto GameConfig
 goto MainMenu
 
 :GameConfig
 if exist "Questions\tempsubjectlist.txt" del /f /q "Questions\tempsubjectlist.txt"
 dir /b /a:d "Questions" >"Questions\tempsubjectlist.txt"
 cls
-echo.
 echo %ngbanner%
 echo.
 echo Choose the subjects that the team(s) will be playing today.
@@ -190,7 +283,6 @@ goto MainMenu
 
 :dispsubjects
 cls
-echo.
 echo %ngbanner%
 echo.
 more "Questions\tempsubjectlist.txt"
@@ -201,7 +293,6 @@ goto GameConfig
 
 :GameConfigFinal
 cls
-echo.
 echo %ngbanner%
 echo.
 echo There are five subjects that we will be playing with in this round. Each one
@@ -373,7 +464,6 @@ set /a questionsanswered=%questionsanswered%+1
 pause>nul
 goto GameSetup
 
-
 :VerifyEnd
 cls
 echo %qbanner%
@@ -408,15 +498,23 @@ goto GameSetup
 
 :CreditsAbout
 cls
-echo.
 echo Quizzer Credits and About ------------------------------------------------------
 echo.
-echo   Hello! Thanks for looking at this; I was honestly expecting no one to look in
+echo   Hello^^! Thanks for looking at this; I was honestly expecting no one to look in
 echo here. You deserve a cookie! Anyways, this program was developed wholly by me,
 echo RHDevelops.
 echo   This is my first project that I have actually distributed for other people to
-echo download and enjoy. Made in just one day. Follow the links below to reach out!
-echo   This work is placed under the GNU GPL v3 license. It should be in this folder.
+echo download and enjoy. Made in just one day. Follow the links below to reach out^^!
+echo   This work is placed under the GNU GPL v3 license. It should be in the folder.
+echo.
+echo If you plan on editing the code and/or distributing it, please read below.
+echo     You are not required to accept the license that has been bundled in, GNU
+echo     GENERAL PUBLIC LICENSE, Version 3, to own a copy of and play Quizzer. How-
+echo     ever, if you wish to modify the source code in any form and/or distribute
+echo     copies of that source code, you must agree to the license and give proper,
+echo     visible credit to me and and any other developers and contributors to this
+echo     game in the future. I will give you credit if you submit code to me and I
+echo     utilize it within the game.
 echo.
 echo 1) Go to my GitHub website          rhdevelops.github.io
 echo.
@@ -429,20 +527,19 @@ echo.
 echo 5) Back to Main Menu
 echo.
 echo %banner%
-set "choice=A"
-set /p choice=Choice:
-if "%choice%"=="5" goto MainMenu
-if "%choice%"=="4" start "" "https://rhdevelops.blogspot.com"
-if "%choice%"=="3" start "" "https://youtube.com/channel/UC8O9jPsC97ryuZJG6H9NoYQ"
-if "%choice%"=="2" start "" "https://twitter.com/RHDevelopsS"
-if "%choice%"=="1" start "" "https://rhdevelops.github.io"
+choice /c 12345 /n /m "Choice:"
+if %errorlevel%==5 goto MainMenu
+if %errorlevel%==4 start "" "https://rhdevelops.blogspot.com"
+if %errorlevel%==3 start "" "https://youtube.com/channel/UC8O9jPsC97ryuZJG6H9NoYQ"
+if %errorlevel%==2 start "" "https://twitter.com/RHDevelopsS"
+if %errorlevel%==1 start "" "https://rhdevelops.github.io"
 goto CreditsAbout
 
 :GameOver
 cls
 echo %qbanner%
 echo.
-echo The final question has been answered! The final points have been tallied up.
+echo The final question has been answered^^! The final points have been tallied up.
 echo.
 echo Team 1: %team1%
 echo Team 2: %team2%
@@ -454,16 +551,14 @@ echo Press any key to continue.
 echo.
 echo %banner%
 pause>nul
-ping -n 5 localhost>nul
-echo Please wait.
+ping -n 3 localhost>nul
 goto CreditsAbout
 
 :QuitScreen
 cls
-echo.
 echo Quit Quizzer -------------------------------------------------------------------
 echo.
-echo Thanks for playing! Have a good day, and hopefully you come back soon.
+echo Thanks for playing^^! Have a good day, and hopefully you come back soon.
 echo.
 echo Visit rhdevelops.github.io for plenty of more content like this.
 echo.
